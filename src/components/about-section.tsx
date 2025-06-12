@@ -2,9 +2,47 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Rocket, Satellite, Zap, Radio } from "lucide-react";
+import { Rocket, Satellite, Zap, Radio, Star, Music, Headphones } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export function AboutSection() {
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+  const testimonials = [
+    {
+      quote: "Mac brought incredible energy and fresh perspective to my track. The mix sounds exactly how I envisioned it - modern, punchy, and professional.",
+      author: "Sarah Chen",
+      role: "Singer-Songwriter",
+      genre: "Indie Pop",
+      rating: 5,
+      icon: Music
+    },
+    {
+      quote: "Working with Mac was amazing. He understood my vision immediately and delivered a mix that exceeded my expectations. Highly recommend!",
+      author: "DJ Marcus",
+      role: "Producer",
+      genre: "Hip Hop",
+      rating: 5,
+      icon: Headphones
+    },
+    {
+      quote: "Mac's attention to detail is incredible. Every element in my song has its place and the final master sounds radio-ready. Will definitely work with him again.",
+      author: "Luna Rodriguez",
+      role: "Recording Artist",
+      genre: "Pop",
+      rating: 5,
+      icon: Satellite
+    },
+    {
+      quote: "Professional, fast, and talented. Mac took my rough demo and turned it into something I'm truly proud of. The communication was excellent throughout.",
+      author: "The Midnight Collective",
+      role: "Band",
+      genre: "Alternative Rock",
+      rating: 5,
+      icon: Rocket
+    }
+  ];
+
   const achievements = [
     {
       icon: Rocket,
@@ -27,6 +65,25 @@ export function AboutSection() {
       description: "Latest industry-standard equipment and software"
     }
   ];
+
+  // Auto-scroll testimonials
+  useEffect(() => {
+    // Start from the middle set to allow smooth infinite scrolling
+    setCurrentTestimonial(testimonials.length);
+    
+    const interval = setInterval(() => {
+      setCurrentTestimonial((prev) => {
+        const next = prev + 1;
+        // Reset to middle when we reach the end to maintain infinite scroll
+        if (next >= testimonials.length * 2) {
+          return testimonials.length;
+        }
+        return next;
+      });
+    }, 4000); // Change every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [testimonials.length]);
 
   return (
     <section id="about" className="py-16 sm:py-24 lg:py-32 bg-muted/30 relative">
@@ -62,34 +119,125 @@ export function AboutSection() {
             viewport={{ once: true }}
             className="relative lg:order-last lg:col-span-5"
           >
-            <figure className="border border-border rounded-2xl bg-background p-6 sm:p-8 relative overflow-hidden">
-              {/* Floating Spaceman */}
-              <div className="absolute top-3 right-3 sm:top-4 sm:right-4 w-12 h-12 sm:w-16 sm:h-16">
-                <Image
-                  src="/MacRaithSpaceMan-NoBackground.png"
-                  alt="Mac Raith Audio Engineer"
-                  fill
-                  className="object-contain float-spaceman opacity-20"
-                />
-              </div>
+            {/* Testimonials Carousel Container */}
+            <div className="relative h-96 sm:h-[28rem] overflow-hidden rounded-2xl">
+              {/* Scrolling Container */}
+              <motion.div
+                animate={{
+                  y: -currentTestimonial * 120 // Adjust spacing between cards
+                }}
+                transition={{
+                  duration: 0.8,
+                  ease: "easeInOut"
+                }}
+                className="space-y-4"
+              >
+                {/* Render testimonials multiple times for infinite scroll effect */}
+                {[...testimonials, ...testimonials, ...testimonials].map((testimonial, index) => {
+                  const actualIndex = index % testimonials.length;
+                  const position = index - currentTestimonial;
+                  const isVisible = Math.abs(position) <= 2; // Show 2 cards above and below
+                  
+                  // Calculate opacity and scale based on position
+                  let opacity = 1;
+                  let scale = 1;
+                  
+                  if (position === 0) {
+                    // Center card - fully visible
+                    opacity = 1;
+                    scale = 1;
+                  } else if (Math.abs(position) === 1) {
+                    // Adjacent cards - slightly faded
+                    opacity = 0.7;
+                    scale = 0.95;
+                  } else if (Math.abs(position) === 2) {
+                    // Far cards - more faded
+                    opacity = 0.4;
+                    scale = 0.9;
+                  } else {
+                    // Hidden cards
+                    opacity = 0;
+                    scale = 0.8;
+                  }
+                  
+                  return (
+                    <motion.figure
+                      key={`${actualIndex}-${Math.floor(index / testimonials.length)}`}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{
+                        opacity: isVisible ? opacity : 0,
+                        scale: scale,
+                      }}
+                      transition={{ duration: 0.6, ease: "easeOut" }}
+                      className={`border border-border rounded-xl bg-background p-3 sm:p-4 relative overflow-hidden h-28 sm:h-32 ${
+                        position === 0 
+                          ? 'shadow-lg shadow-primary/10 border-primary/20' 
+                          : 'shadow-sm'
+                      }`}
+                    >
+                      {/* Floating Spaceman */}
+                      <div className="absolute top-2 right-2 sm:top-3 sm:right-3 w-6 h-6 sm:w-8 sm:h-8">
+                        <Image
+                          src="/MacRaithSpaceMan-NoBackground.png"
+                          alt="Mac Raith Spaceman"
+                          fill
+                          className="object-contain float-spaceman opacity-20"
+                        />
+                      </div>
+                      
+                      {/* Star Rating */}
+                      <div className="flex gap-1 mb-2">
+                        {[...Array(testimonial.rating)].map((_, i) => (
+                          <Star key={i} className="h-2.5 w-2.5 sm:h-3 sm:w-3 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                      
+                      <blockquote className="text-xs sm:text-sm font-medium leading-4 sm:leading-5 tracking-tight text-foreground mb-2 line-clamp-2">
+                        <p>&ldquo;{testimonial.quote}&rdquo;</p>
+                      </blockquote>
+                      
+                      <figcaption className="flex gap-x-2 items-center">
+                        <div className="w-6 h-6 sm:w-7 sm:h-7 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0">
+                          <testimonial.icon className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-primary" />
+                        </div>
+                        <div className="text-xs leading-4 min-w-0">
+                          <div className="font-semibold text-foreground truncate">{testimonial.author}</div>
+                          <div className="text-muted-foreground truncate">{testimonial.role} • <span className="text-primary font-medium">{testimonial.genre}</span></div>
+                        </div>
+                      </figcaption>
+                    </motion.figure>
+                  );
+                })}
+              </motion.div>
               
-              <blockquote className="text-base sm:text-lg font-semibold leading-7 sm:leading-8 tracking-tight text-foreground">
-                <p>
-                  &ldquo;I believe the best mixes come from combining technical precision with 
-                  creative passion. Every project is an opportunity to push boundaries and 
-                  discover new sonic possibilities.&rdquo;
-                </p>
-              </blockquote>
-              <figcaption className="mt-6 sm:mt-8 flex gap-x-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/20 rounded-full flex items-center justify-center spaceman-glow">
-                  <Rocket className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-                </div>
-                <div className="text-sm leading-6">
-                  <div className="font-semibold text-foreground">Mac Raith</div>
-                  <div className="text-muted-foreground">Audio Engineer & Artist</div>
-                </div>
-              </figcaption>
-            </figure>
+              {/* Gradient Overlays for smooth fade effect */}
+              <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-muted/30 to-transparent pointer-events-none z-10"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-muted/30 to-transparent pointer-events-none z-10"></div>
+            </div>
+
+            {/* Progress Indicator
+            <div className="flex justify-center gap-1.5 mt-4">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index + testimonials.length)} // Offset to middle set
+                  className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-300 ${
+                    (currentTestimonial % testimonials.length) === index
+                      ? 'bg-primary w-4 sm:w-5' 
+                      : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
+                  }`}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                />
+              ))}
+            </div> */}
+
+            {/* Auto-scroll indicator
+            <div className="text-center mt-3">
+              <span className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                <div className="w-1 h-1 bg-primary rounded-full animate-pulse"></div>
+                Auto-scrolling testimonials
+              </span>
+            </div> */}
           </motion.div>
 
           <motion.div
