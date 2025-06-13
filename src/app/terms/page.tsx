@@ -45,6 +45,9 @@ export default function TermsOfService() {
                 <li><strong>Full Production:</strong> Complete song production from arrangement to master</li>
                 <li><strong>Consultation:</strong> Audio engineering advice and guidance</li>
               </ul>
+              <p className="text-muted-foreground leading-relaxed mt-4">
+                The website also serves as a portfolio to showcase recent work and provide information about services. All portfolio content is for demonstration purposes only and remains the intellectual property of the original creators.
+              </p>
             </section>
 
             <section>
@@ -189,14 +192,17 @@ export default function TermsOfService() {
             <section>
               <h2 className="text-2xl font-semibold text-foreground mb-4">13. Website Usage</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                This website is provided for informational and business purposes. You agree not to:
+                This website is provided for informational and business inquiry purposes. You agree not to:
               </p>
               <ul className="list-disc pl-6 text-muted-foreground space-y-2">
                 <li>Use the site for any unlawful purpose</li>
                 <li>Attempt to gain unauthorized access to systems</li>
-                <li>Interfere with the website's functionality</li>
+                <li>Interfere with the website&apos;s functionality</li>
                 <li>Copy or distribute content without permission</li>
               </ul>
+              <p className="text-muted-foreground leading-relaxed mt-4">
+                The site features a space-themed visual identity (including a spaceman logo and cosmic backgrounds) as part of its branding. This is for visual and branding purposes only and does not affect your rights or obligations.
+              </p>
             </section>
 
             <section>

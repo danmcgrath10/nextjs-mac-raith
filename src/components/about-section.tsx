@@ -8,39 +8,22 @@ import { useState, useEffect } from "react";
 export function AboutSection() {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
-  const testimonials = [
-    {
-      quote: "Mac brought incredible energy and fresh perspective to my track. The mix sounds exactly how I envisioned it - modern, punchy, and professional.",
-      author: "Sarah Chen",
-      role: "Singer-Songwriter",
-      genre: "Indie Pop",
-      rating: 5,
-      icon: Music
-    },
-    {
-      quote: "Working with Mac was amazing. He understood my vision immediately and delivered a mix that exceeded my expectations. Highly recommend!",
-      author: "DJ Marcus",
-      role: "Producer",
-      genre: "Hip Hop",
-      rating: 5,
-      icon: Headphones
-    },
-    {
-      quote: "Mac's attention to detail is incredible. Every element in my song has its place and the final master sounds radio-ready. Will definitely work with him again.",
-      author: "Luna Rodriguez",
-      role: "Recording Artist",
-      genre: "Pop",
-      rating: 5,
-      icon: Satellite
-    },
-    {
-      quote: "Professional, fast, and talented. Mac took my rough demo and turned it into something I'm truly proud of. The communication was excellent throughout.",
-      author: "The Midnight Collective",
-      role: "Band",
-      genre: "Alternative Rock",
-      rating: 5,
-      icon: Rocket
-    }
+  const testimonials: {
+    quote: string;
+    author: string;
+    role: string;
+    genre: string;
+    rating: number;
+    icon: React.ElementType;
+  }[] = [
+    // {
+    //   quote: "Mac brought incredible energy and fresh perspective to my track. The mix sounds exactly how I envisioned it - modern, punchy, and professional.",
+    //   author: "Sarah Chen",
+    //   role: "Singer-Songwriter",
+    //   genre: "Indie Pop",
+    //   rating: 5,
+    //   icon: Music
+    // }, 
   ];
 
   const achievements = [

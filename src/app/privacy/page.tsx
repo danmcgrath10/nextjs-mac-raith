@@ -28,7 +28,7 @@ export default function PrivacyPolicy() {
             <section>
               <h2 className="text-2xl font-semibold text-foreground mb-4">1. Introduction</h2>
               <p className="text-muted-foreground leading-relaxed">
-                Mac Raith Audio Engineering ("we," "our," or "us") is committed to protecting your privacy. 
+                Mac Raith Audio Engineering (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting your privacy. 
                 This Privacy Policy explains how we collect, use, disclose, and safeguard your information 
                 when you visit our website or use our audio engineering services.
               </p>
@@ -44,7 +44,6 @@ export default function PrivacyPolicy() {
               <ul className="list-disc pl-6 text-muted-foreground space-y-2 mb-6">
                 <li>Name and contact information (email address, phone number)</li>
                 <li>Project details and musical content you share with us</li>
-                <li>Payment information for our services</li>
                 <li>Communication preferences</li>
               </ul>
 
@@ -63,9 +62,8 @@ export default function PrivacyPolicy() {
                 We use the information we collect to:
               </p>
               <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-                <li>Provide audio engineering services (mixing, mastering, production)</li>
+                <li>Respond to inquiries and provide audio engineering services</li>
                 <li>Communicate about projects and service updates</li>
-                <li>Process payments and maintain business records</li>
                 <li>Improve our website and services</li>
                 <li>Comply with legal obligations</li>
                 <li>Send promotional communications (with your consent)</li>
@@ -78,7 +76,7 @@ export default function PrivacyPolicy() {
                 We do not sell, trade, or rent your personal information. We may share information in these limited circumstances:
               </p>
               <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-                <li><strong>Service Providers:</strong> Third-party tools for payment processing, email services, and website analytics</li>
+                <li><strong>Service Providers:</strong> Third-party tools for email services, analytics, and embedded media</li>
                 <li><strong>Legal Requirements:</strong> When required by law or to protect our rights</li>
                 <li><strong>Business Transfers:</strong> In connection with a merger, sale, or acquisition</li>
                 <li><strong>With Your Consent:</strong> When you explicitly agree to information sharing</li>
@@ -150,7 +148,7 @@ export default function PrivacyPolicy() {
               <ul className="list-disc pl-6 text-muted-foreground space-y-2">
                 <li><strong>Spotify:</strong> For displaying portfolio music (subject to Spotify's privacy policy)</li>
                 <li><strong>Analytics Services:</strong> For website performance monitoring</li>
-                <li><strong>Payment Processors:</strong> For secure transaction processing</li>
+                <li><strong>Contact Form Services:</strong> For processing inquiries</li>
               </ul>
             </section>
 
@@ -177,7 +175,7 @@ export default function PrivacyPolicy() {
               <p className="text-muted-foreground leading-relaxed">
                 We may update this Privacy Policy periodically. We will notify you of any 
                 material changes by posting the new policy on this page and updating the 
-                "Last updated" date. Your continued use of our services constitutes acceptance 
+                &quot;Last updated&quot; date. Your continued use of our services constitutes acceptance 
                 of the updated policy.
               </p>
             </section>

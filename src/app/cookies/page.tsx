@@ -28,29 +28,23 @@ export default function CookiePolicy() {
             <section>
               <h2 className="text-2xl font-semibold text-foreground mb-4">1. What Are Cookies</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                Cookies are small text files that are stored on your device when you visit our website. 
-                They help us provide you with a better browsing experience by remembering your preferences 
-                and analyzing how you use our site.
+                Cookies are small text files stored on your device when you visit our website. They help us provide a better browsing experience by remembering your preferences and analyzing how you use our site.
               </p>
               <p className="text-muted-foreground leading-relaxed">
-                This Cookie Policy explains what cookies are, how we use them, and how you can control them 
-                when visiting the Mac Raith Audio Engineering website.
+                This Cookie Policy explains what cookies are, how we use them, and how you can control them when visiting the Mac Raith Audio Engineering website.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold text-foreground mb-4">2. Types of Cookies We Use</h2>
-              
               <h3 className="text-xl font-medium text-foreground mb-3">2.1 Essential Cookies</h3>
               <p className="text-muted-foreground leading-relaxed mb-3">
                 These cookies are necessary for the website to function properly and cannot be switched off.
               </p>
               <ul className="list-disc pl-6 text-muted-foreground space-y-2 mb-6">
-                <li><strong>Session cookies:</strong> Keep you logged in during your visit</li>
-                <li><strong>Security cookies:</strong> Protect against cross-site request forgery</li>
                 <li><strong>Functional cookies:</strong> Remember your preferences and settings</li>
+                <li><strong>Security cookies:</strong> Help protect the site and its visitors</li>
               </ul>
-
               <h3 className="text-xl font-medium text-foreground mb-3">2.2 Analytics Cookies</h3>
               <p className="text-muted-foreground leading-relaxed mb-3">
                 These cookies help us understand how visitors interact with our website.
@@ -58,17 +52,13 @@ export default function CookiePolicy() {
               <ul className="list-disc pl-6 text-muted-foreground space-y-2 mb-6">
                 <li><strong>Google Analytics:</strong> Tracks page views, user behavior, and site performance</li>
                 <li><strong>Performance cookies:</strong> Monitor website speed and functionality</li>
-                <li><strong>Usage statistics:</strong> Help us improve our content and services</li>
               </ul>
-
-              <h3 className="text-xl font-medium text-foreground mb-3">2.3 Marketing Cookies</h3>
+              <h3 className="text-xl font-medium text-foreground mb-3">2.3 Embedded Media Cookies</h3>
               <p className="text-muted-foreground leading-relaxed mb-3">
-                These cookies track your browsing habits to show you relevant advertisements.
+                Some cookies are set by embedded media players (e.g., Spotify) to enable playback and track usage.
               </p>
               <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-                <li><strong>Social media cookies:</strong> Enable sharing on social platforms</li>
-                <li><strong>Advertising cookies:</strong> Deliver targeted advertisements</li>
-                <li><strong>Retargeting cookies:</strong> Show relevant ads on other websites</li>
+                <li><strong>Spotify cookies:</strong> Enable audio previews and track engagement</li>
               </ul>
             </section>
 
@@ -81,7 +71,6 @@ export default function CookiePolicy() {
                 <li><strong>Spotify:</strong> Embedded music players and portfolio content</li>
                 <li><strong>Google Analytics:</strong> Website traffic analysis and reporting</li>
                 <li><strong>Social Media Platforms:</strong> Share buttons and embedded content</li>
-                <li><strong>Payment Processors:</strong> Secure transaction processing</li>
               </ul>
             </section>
 
@@ -95,8 +84,7 @@ export default function CookiePolicy() {
                 <li><strong>User experience improvement:</strong> Remember your preferences and settings</li>
                 <li><strong>Analytics and insights:</strong> Understand how visitors use our site</li>
                 <li><strong>Performance optimization:</strong> Monitor and improve site speed</li>
-                <li><strong>Security:</strong> Protect against malicious activities</li>
-                <li><strong>Marketing effectiveness:</strong> Measure campaign performance</li>
+                <li><strong>Embedded media:</strong> Enable playback and engagement tracking for portfolio content</li>
               </ul>
             </section>
 
