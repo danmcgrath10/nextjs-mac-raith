@@ -244,7 +244,7 @@ export function PortfolioSection() {
                           </div>
                         </div>
                         <div className="flex flex-wrap gap-1 mb-3">
-                          {item.services.slice(0, 2).map((service) => (
+                          {item.services.map((service) => (
                             <Badge
                               key={service}
                               variant="secondary"

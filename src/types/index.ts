@@ -22,8 +22,9 @@ export interface PortfolioItem {
 }
 
 export type ContactFormData = {
-  name: string;
+  name?: string;
   email: string;
-  subject: string;
-  message: string;
+  project_type?: "mixing" | "mastering" | "both" | "consultation";
+  subject?: string;
+  message?: string;
 }; 

@@ -10,13 +10,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { ContactFormData } from "@/types";
+import { createClient } from '@supabase/supabase-js';
 
 const contactFormSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
+  name: z.string().min(2, "Name must be at least 2 characters").optional(),
   email: z.string().email("Please enter a valid email address"),
-  subject: z.string().min(5, "Subject must be at least 5 characters"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
+  project_type: z.enum(["mixing", "mastering", "both", "consultation"], {
+    required_error: "Please select a project type",
+  }).optional(),
+  subject: z.string().min(5, "Subject must be at least 5 characters").optional(),
+  message: z.string().min(20, "Message must be at least 20 characters").optional(),
 });
+
+// Initialize Supabase client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('Supabase URL and key must be defined');
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 export function ContactSection() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -36,20 +50,26 @@ export function ContactSection() {
     setSubmitStatus("idle");
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+      // Map data to match Supabase schema (snake_case for project_type)
+      const supabaseData = {
+        name: data.name || null,
+        email: data.email,
+        project_type: data.project_type || null,
+        subject: data.subject || null,
+        message: data.message || null,
+      };
 
-      if (response.ok) {
-        setSubmitStatus("success");
-        reset();
-      } else {
-        throw new Error('Message failed to send');
+      const { error } = await supabase
+        .from('contacts')
+        .insert([supabaseData]);
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error('Failed to store contact data');
       }
+
+      setSubmitStatus("success");
+      reset();
     } catch (error) {
       console.error('Contact form error:', error);
       setSubmitStatus("error");
@@ -147,13 +167,35 @@ export function ContactSection() {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-foreground mb-2">
+                  <label htmlFor="project_type" className="block text-sm font-medium text-foreground mb-2">
                     Project Type
+                  </label>
+                  <select
+                    id="project_type"
+                    {...register("project_type")}
+                    className="focus-ring h-10 sm:h-11 w-full rounded-md border border-border bg-background px-3 py-2 text-foreground text-sm sm:text-base"
+                    defaultValue=""
+                  >
+                    <option value="" disabled>
+                      Select project type
+                    </option>
+                    <option value="mixing">Mixing</option>
+                    <option value="mastering">Mastering</option>
+                    <option value="both">Mixing & Mastering</option>
+                    <option value="consultation">Consultation</option>
+                  </select>
+                  {errors.project_type && (
+                    <p className="mt-1 text-xs sm:text-sm text-red-500">{errors.project_type.message as string}</p>
+                  )}
+                </div>
+                <div>
+                  <label htmlFor="subject" className="block text-sm font-medium text-foreground mb-2">
+                    Subject
                   </label>
                   <Input
                     id="subject"
                     type="text"
-                    placeholder="Mixing, Mastering, or Full Production"
+                    placeholder="Project subject or title"
                     {...register("subject")}
                     className="focus-ring h-10 sm:h-11"
                   />

@@ -16,7 +16,7 @@ export default function HomePage() {
         <ServicesSection />
         <PortfolioSection />
         <ContactSection />
-      </main>
+    </main>
       <Footer />
     </>
   );

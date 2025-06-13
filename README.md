@@ -64,6 +64,14 @@ Mac Raith Audio Engineering is a professional portfolio website showcasing audio
    # Sanity CMS (if using)
    NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
    NEXT_PUBLIC_SANITY_DATASET=production
+   
+   # SMTP Configuration
+   SMTP_HOST=smtp.example.com
+   SMTP_PORT=587
+   SMTP_USER=your-email@example.com
+   SMTP_PASS=your-password
+   SMTP_FROM=noreply@example.com
+   CONTACT_EMAIL=hello@example.com
    ```
 
 4. **Spotify Setup**
@@ -223,3 +231,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Built with ❤️ by Mac Raith Audio Engineering**
+
+## Contact Form Setup
+
+The contact form uses Nodemailer to send emails. Ensure your SMTP configuration is correct in the `.env.local` file. The form sends a notification to the specified `CONTACT_EMAIL` and an auto-reply to the user.
+
+### Troubleshooting
+
+If you encounter issues with the contact form, check the following:
+
+- Ensure your SMTP server is running and accessible.
+- Verify that the environment variables are correctly set.
+- Check the browser console for any error messages.
