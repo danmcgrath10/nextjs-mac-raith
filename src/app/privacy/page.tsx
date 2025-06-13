@@ -146,14 +146,14 @@ export default function PrivacyPolicy() {
                 Our website may integrate with third-party services:
               </p>
               <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-                <li><strong>Spotify:</strong> For displaying portfolio music (subject to Spotify's privacy policy)</li>
+                <li><strong>Spotify:</strong> For displaying portfolio music (subject to Spotify&apos;s privacy policy)</li>
                 <li><strong>Analytics Services:</strong> For website performance monitoring</li>
                 <li><strong>Contact Form Services:</strong> For processing inquiries</li>
               </ul>
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-foreground mb-4">10. Children's Privacy</h2>
+              <h2 className="text-2xl font-semibold text-foreground mb-4">10. Children&apos;s Privacy</h2>
               <p className="text-muted-foreground leading-relaxed">
                 Our services are not directed to children under 13. We do not knowingly collect 
                 personal information from children under 13. If you believe we have collected 

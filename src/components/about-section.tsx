@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Rocket, Satellite, Zap, Radio, Star, Music, Headphones } from "lucide-react";
+import { Rocket, Satellite, Zap, Radio, Star } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export function AboutSection() {
