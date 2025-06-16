@@ -1,12 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Play, Pause, ExternalLink, Satellite, Music, Clock, Calendar, Headphones, RefreshCw, X } from "lucide-react";
+import { Play, Pause, ExternalLink, Satellite, Music, Clock, Calendar, Headphones, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { PortfolioItem } from "@/types";
 import { useState, useEffect } from "react";
 import { extractTrackId, fetchSpotifyTracks, convertSpotifyToPortfolioItem } from "@/lib/spotify";
+import Image from "next/image";
+import React from "react";
 
 // Spotify URLs for your tracks - just add the URLs here!
 const spotifyUrls = [
@@ -18,13 +20,16 @@ const spotifyUrls = [
   }
 ];
 
+/**
+ * PortfolioSection displays a grid of recent audio projects with Spotify integration.
+ * Mobile-first, accessible, and optimized for performance.
+ */
 export function PortfolioSection() {
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
   const [isLoadingTracks, setIsLoadingTracks] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedTrack, setSelectedTrack] = useState<string | null>(null);
 
   // Fetch tracks from Spotify on component mount
   useEffect(() => {
@@ -88,12 +93,127 @@ export function PortfolioSection() {
     window.location.reload();
   };
 
-  const handleTileClick = (id: string) => {
-    // On mobile, clicking toggles the info overlay
-    if (window.innerWidth < 1024) {
-      setSelectedTrack(selectedTrack === id ? null : id);
-    }
-  };
+  // Memoized grid item for performance
+  const PortfolioGridItem = React.memo(function PortfolioGridItem({ item, index }: { item: PortfolioItem; index: number }) {
+    return (
+      <motion.div
+        key={item.id}
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4, delay: index * 0.08 }}
+        viewport={{ once: true }}
+        className="group relative aspect-square"
+      >
+        {/* Album Art Tile */}
+        <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 via-purple-500/10 to-blue-500/20 border border-border hover:border-primary/40 transition-all duration-300">
+          {/* Optimized Album Art */}
+          {item.imageUrl && item.imageUrl !== '/api/placeholder/400/400' ? (
+            <Image
+              src={item.imageUrl}
+              alt={`${item.title} album art`}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 16vw"
+              className="object-cover object-center"
+              priority={index < 2}
+              loading={index < 2 ? 'eager' : 'lazy'}
+              draggable={false}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-primary/30 to-blue-500/30 rounded-full flex items-center justify-center border-2 border-white/20">
+                <Music className="h-6 w-6 sm:h-8 sm:w-8 text-white/80" />
+              </div>
+            </div>
+          )}
+
+          {/* Content Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 flex flex-col justify-end">
+            <div className="space-y-2">
+              <h3 className="text-white font-bold text-sm sm:text-base line-clamp-2">{item.title}</h3>
+              <p className="text-white/80 text-xs line-clamp-1">{item.artist}</p>
+              
+              <div className="flex items-center gap-2 text-xs text-white/60">
+                <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{item.duration}</span>
+                <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{item.year}</span>
+              </div>
+
+              <div className="flex flex-wrap gap-1 mb-3">
+                {item.services.map((service) => (
+                  <Badge key={service} variant="secondary" className="text-xs bg-white/20 text-white border-0">
+                    {service}
+                  </Badge>
+                ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  aria-label={playingId === item.id ? 'Pause preview' : 'Play preview'}
+                  onClick={() => togglePlay(item.id)}
+                  className="flex-1 rounded-full bg-primary hover:bg-primary/90 h-8 text-xs"
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <div className="w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : playingId === item.id ? (
+                    <Pause className="h-3 w-3" />
+                  ) : (
+                    <Play className="h-3 w-3" />
+                  )}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  aria-label="Open in Spotify"
+                  onClick={() => openSpotify(item.spotifyUrl!)}
+                  className="rounded-full bg-[#1DB954] hover:bg-[#1ed760] text-white border-0 h-8 px-3"
+                >
+                  <ExternalLink className="h-3 w-3" />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Now Playing Indicator */}
+          {playingId === item.id && (
+            <div className="absolute top-2 left-2 flex items-center gap-1 bg-primary/90 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
+              <div className="flex gap-0.5">
+                <div className="w-0.5 h-2 bg-white rounded-full animate-pulse"></div>
+                <div className="w-0.5 h-1.5 bg-white rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-0.5 h-3 bg-white rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+              </div>
+            </div>
+          )}
+        </div>
+      </motion.div>
+    );
+  });
+
+  // Early return for loading
+  if (isLoadingTracks) {
+    return (
+      <section id="portfolio" className="py-8 sm:py-12 bg-gradient-to-b from-background to-muted/30 relative overflow-hidden">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mt-8">
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="aspect-square rounded-2xl bg-muted animate-pulse"></div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+  // Early return for error
+  if (error) {
+    return (
+      <section id="portfolio" className="py-8 sm:py-12 bg-gradient-to-b from-background to-muted/30 relative overflow-hidden">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-red-500">{error}</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="portfolio" className="py-12 sm:py-16 lg:py-20 bg-gradient-to-b from-background to-muted/30 relative overflow-hidden">
@@ -167,151 +287,11 @@ export function PortfolioSection() {
           </Button>
         </motion.div>
 
-        {/* Loading State */}
-        {isLoadingTracks ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4 mt-8">
-            {[...Array(6)].map((_, index) => (
-              <div key={index} className="aspect-square rounded-2xl bg-muted animate-pulse"></div>
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4 mt-8">
-            {portfolioItems.map((item, index) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="group relative aspect-square cursor-pointer"
-                onClick={() => handleTileClick(item.id)}
-              >
-                {/* Album Art Tile */}
-                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 via-purple-500/10 to-blue-500/20 border border-border hover:border-primary/40 transition-all duration-300 hover:scale-105">
-                  {/* Background Image */}
-                  {item.imageUrl && item.imageUrl !== '/api/placeholder/400/400' ? (
-                    <div 
-                      className="absolute inset-0 bg-cover bg-center"
-                      style={{ backgroundImage: `url(${item.imageUrl})` }}
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-primary/30 to-blue-500/30 rounded-full flex items-center justify-center border-2 border-white/20">
-                        <Music className="h-6 w-6 sm:h-8 sm:w-8 text-white/80" />
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Hover/Selected Overlay with Track Info */}
-                  <div className={`absolute inset-0 bg-black/90 backdrop-blur-sm transition-all duration-300 ${
-                    selectedTrack === item.id 
-                      ? 'opacity-100' 
-                      : 'opacity-0 lg:group-hover:opacity-100'
-                  } flex flex-col p-3 sm:p-4`}>
-                    
-                    {/* Close button for mobile */}
-                    {selectedTrack === item.id && (
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedTrack(null);
-                        }}
-                        className="absolute top-2 right-2 h-6 w-6 text-white/70 hover:text-white lg:hidden"
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    )}
-
-                    {/* Track Info */}
-                    <div className="flex-1 flex flex-col justify-between">
-                      <div>
-                        <h3 className="text-white font-bold text-sm sm:text-base mb-1 line-clamp-2">
-                          {item.title}
-                        </h3>
-                        <p className="text-white/80 text-xs mb-2 line-clamp-1">
-                          {item.artist}
-                        </p>
-                        <div className="flex items-center gap-3 text-xs text-white/60 mb-3">
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {item.duration}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            {item.year}
-                          </div>
-                        </div>
-                        <div className="flex flex-wrap gap-1 mb-3">
-                          {item.services.map((service) => (
-                            <Badge
-                              key={service}
-                              variant="secondary"
-                              className="text-xs bg-white/20 text-white border-0"
-                            >
-                              {service}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Action Buttons */}
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            togglePlay(item.id);
-                          }}
-                          className="flex-1 rounded-full bg-primary hover:bg-primary/90 h-8 text-xs"
-                          disabled={isLoading}
-                        >
-                          {isLoading ? (
-                            <div className="w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin" />
-                          ) : playingId === item.id ? (
-                            <Pause className="h-3 w-3" />
-                          ) : (
-                            <Play className="h-3 w-3" />
-                          )}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            openSpotify(item.spotifyUrl!);
-                          }}
-                          className="rounded-full bg-[#1DB954] hover:bg-[#1ed760] text-white border-0 h-8 px-3"
-                        >
-                          <ExternalLink className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Now Playing Indicator */}
-                  {playingId === item.id && (
-                    <div className="absolute top-2 left-2 flex items-center gap-1 bg-primary/90 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
-                      <div className="flex gap-0.5">
-                        <div className="w-0.5 h-2 bg-white rounded-full animate-pulse"></div>
-                        <div className="w-0.5 h-1.5 bg-white rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
-                        <div className="w-0.5 h-3 bg-white rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Play Button Hint */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 lg:group-hover:opacity-0 transition-opacity duration-200 bg-black/40">
-                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                      <Play className="h-4 w-4 text-white ml-0.5" />
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4 mt-8">
+          {portfolioItems.map((item, index) => (
+            <PortfolioGridItem key={item.id} item={item} index={index} />
+          ))}
+        </div>
 
         {/* Call to Action */}
         <motion.div
