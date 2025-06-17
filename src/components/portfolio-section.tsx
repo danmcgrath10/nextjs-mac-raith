@@ -285,10 +285,10 @@ export function PortfolioSection() {
                 <Play className="mr-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 Start Your Project
               </Button>
-              <Button variant="outline" size="lg" className="w-full sm:w-auto px-6 group">
+              {/* <Button variant="outline" size="lg" className="w-full sm:w-auto px-6 group">
                 <Music className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
                 Follow on Spotify
-              </Button>
+              </Button> */}
             </div>
           </div>
         </motion.div>
