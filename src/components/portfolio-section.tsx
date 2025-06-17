@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Play, Pause, ExternalLink, Satellite, Music, Clock, Calendar, Headphones, RefreshCw } from "lucide-react";
+import { Play, ExternalLink, Satellite, Music, Clock, Calendar, Headphones, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { PortfolioItem } from "@/types";
@@ -25,8 +25,6 @@ const spotifyUrls = [
  * Mobile-first, accessible, and optimized for performance.
  */
 export function PortfolioSection() {
-  const [playingId, setPlayingId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
   const [isLoadingTracks, setIsLoadingTracks] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -75,22 +73,8 @@ export function PortfolioSection() {
     loadSpotifyTracks();
   }, []);
 
-  const togglePlay = (id: string) => {
-    setIsLoading(true);
-    // Simulate loading
-    setTimeout(() => {
-      setPlayingId(playingId === id ? null : id);
-      setIsLoading(false);
-    }, 500);
-  };
-
   const openSpotify = (url: string) => {
     window.open(url, '_blank');
-  };
-
-  const refreshTracks = () => {
-    setIsLoadingTracks(true);
-    window.location.reload();
   };
 
   // Memoized grid item for performance
@@ -145,46 +129,21 @@ export function PortfolioSection() {
                 ))}
               </div>
 
-              {/* Action Buttons */}
+              {/* Only Spotify Button */}
               <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  aria-label={playingId === item.id ? 'Pause preview' : 'Play preview'}
-                  onClick={() => togglePlay(item.id)}
-                  className="flex-1 rounded-full bg-primary hover:bg-primary/90 h-8 text-xs"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <div className="w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin" />
-                  ) : playingId === item.id ? (
-                    <Pause className="h-3 w-3" />
-                  ) : (
-                    <Play className="h-3 w-3" />
-                  )}
-                </Button>
                 <Button
                   size="sm"
                   variant="outline"
                   aria-label="Open in Spotify"
                   onClick={() => openSpotify(item.spotifyUrl!)}
-                  className="rounded-full bg-[#1DB954] hover:bg-[#1ed760] text-white border-0 h-8 px-3"
+                  className="rounded-full bg-[#1DB954] hover:bg-[#1ed760] text-white border-0 h-8 px-3 w-full"
                 >
-                  <ExternalLink className="h-3 w-3" />
+                  <ExternalLink className="h-3 w-3 mr-2" />
+                  Listen on Spotify
                 </Button>
               </div>
             </div>
           </div>
-
-          {/* Now Playing Indicator */}
-          {playingId === item.id && (
-            <div className="absolute top-2 left-2 flex items-center gap-1 bg-primary/90 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
-              <div className="flex gap-0.5">
-                <div className="w-0.5 h-2 bg-white rounded-full animate-pulse"></div>
-                <div className="w-0.5 h-1.5 bg-white rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-0.5 h-3 bg-white rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-              </div>
-            </div>
-          )}
         </div>
       </motion.div>
     );
@@ -278,7 +237,10 @@ export function PortfolioSection() {
           <Button 
             variant="outline" 
             size="sm" 
-            onClick={refreshTracks}
+            onClick={() => {
+              setIsLoadingTracks(true);
+              window.location.reload();
+            }}
             disabled={isLoadingTracks}
             className="mb-8 text-xs"
           >
