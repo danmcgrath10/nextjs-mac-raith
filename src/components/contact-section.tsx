@@ -12,16 +12,6 @@ import { Textarea } from "@/components/ui/textarea";
 import type { ContactFormData } from "@/types";
 import { createClient } from '@supabase/supabase-js';
 
-const contactFormSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").optional(),
-  email: z.string().email("Please enter a valid email address"),
-  project_type: z.enum(["mixing", "mastering", "both", "consultation"], {
-    required_error: "Please select a project type",
-  }).optional(),
-  subject: z.string().min(5, "Subject must be at least 5 characters").optional(),
-  message: z.string().min(20, "Message must be at least 20 characters").optional(),
-});
-
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -31,6 +21,16 @@ if (!supabaseUrl || !supabaseKey) {
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
+
+const contactFormSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters").optional(),
+  email: z.string().email("Please enter a valid email address"),
+  project_type: z.enum(["mixing", "mastering", "both", "consultation"], {
+    required_error: "Please select a project type",
+  }).optional(),
+  subject: z.string().min(5, "Subject must be at least 5 characters").optional(),
+  message: z.string().min(20, "Message must be at least 20 characters").optional(),
+});
 
 export function ContactSection() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -50,7 +50,7 @@ export function ContactSection() {
     setSubmitStatus("idle");
 
     try {
-      // Map data to match Supabase schema (snake_case for project_type)
+      // Prepare data for Supabase
       const supabaseData = {
         name: data.name || null,
         email: data.email,
@@ -59,13 +59,17 @@ export function ContactSection() {
         message: data.message || null,
       };
 
+      // Use upsert to handle the unique email constraint
       const { error } = await supabase
         .from('contacts')
-        .insert([supabaseData]);
+        .upsert(supabaseData, { 
+          onConflict: 'email',
+          ignoreDuplicates: false 
+        });
 
       if (error) {
         console.error('Supabase error:', error);
-        throw new Error('Failed to store contact data');
+        throw new Error(`Failed to store contact data: ${error.message}`);
       }
 
       setSubmitStatus("success");
