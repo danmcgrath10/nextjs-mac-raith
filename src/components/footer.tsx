@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { Rocket, Instagram, Twitter, Youtube, Mail, Satellite } from "lucide-react";
+import { Rocket, Instagram, Youtube, Mail, Satellite } from "lucide-react";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -16,17 +16,12 @@ export function Footer() {
     social: [
       {
         name: "Instagram",
-        href: "#",
+        href: "https://www.instagram.com/mac_raith/",
         icon: Instagram,
       },
       {
-        name: "Twitter",
-        href: "#",
-        icon: Twitter,
-      },
-      {
         name: "YouTube",
-        href: "#",
+        href: "https://www.youtube.com/@macraithofficial",
         icon: Youtube,
       },
       {

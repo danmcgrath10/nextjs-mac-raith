@@ -1,9 +1,20 @@
 import { Metadata } from "next";
+import { generateSEO } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEO({
   title: "Privacy Policy | Mac Raith Audio Engineering",
-  description: "Privacy policy for Mac Raith Audio Engineering services and website usage.",
-};
+  description: "Privacy policy for Mac Raith Audio Engineering services and website usage. Learn how we protect your personal information and musical content.",
+  url: "/privacy",
+  keywords: [
+    "privacy policy",
+    "Mac Raith audio",
+    "data protection",
+    "music privacy",
+    "audio engineering privacy",
+    "GDPR compliance",
+    "personal information protection"
+  ]
+});
 
 export default function PrivacyPolicy() {
   const currentDate = new Date().toLocaleDateString('en-US', { 
@@ -146,7 +157,6 @@ export default function PrivacyPolicy() {
                 Our website may integrate with third-party services:
               </p>
               <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-                <li><strong>Spotify:</strong> For displaying portfolio music (subject to Spotify&apos;s privacy policy)</li>
                 <li><strong>Analytics Services:</strong> For website performance monitoring</li>
                 <li><strong>Contact Form Services:</strong> For processing inquiries</li>
               </ul>

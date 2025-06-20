@@ -45,8 +45,8 @@ export async function POST(request: NextRequest) {
 
     // Send email
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || "noreply@macraith.com",
-      to: process.env.CONTACT_EMAIL || "hello@macraith.com",
+      from: process.env.SMTP_FROM || "noreply@macraithmusic.com",
+      to: process.env.CONTACT_EMAIL || "collab@macraithmusic.com",
       subject: `New Contact: ${validatedData.subject}`,
       text: emailContent,
       replyTo: validatedData.email,
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
 
     // Send auto-reply to the user
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || "noreply@macraith.com",
+              from: process.env.SMTP_FROM || "noreply@macraithmusic.com",
       to: validatedData.email,
       subject: "Thank you for your message - Mac Raith Audio",
       text: `Hi ${validatedData.name},

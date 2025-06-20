@@ -1,9 +1,20 @@
 import { Metadata } from "next";
+import { generateSEO } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEO({
   title: "Terms of Service | Mac Raith Audio Engineering",
-  description: "Terms of service for Mac Raith Audio Engineering services and website usage.",
-};
+  description: "Terms of service for Mac Raith Audio Engineering professional mixing and mastering services. Project process, pricing, and service agreements.",
+  url: "/terms",
+  keywords: [
+    "terms of service",
+    "Mac Raith audio",
+    "mixing contract",
+    "mastering terms",
+    "audio engineering agreement",
+    "service terms",
+    "professional audio contract"
+  ]
+});
 
 export default function TermsOfService() {
   const currentDate = new Date().toLocaleDateString('en-US', { 

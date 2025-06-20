@@ -269,7 +269,7 @@ export function PortfolioSection() {
               Ready to Create Your Next Hit?
             </h3>
             <p className="text-sm sm:text-base text-muted-foreground mb-4 leading-relaxed">
-              Every track represents a unique sonic journey. Let&apos;s craft something extraordinary together.
+              Every track represents a unique step in the journey. Let&apos;s craft something extraordinary together.
             </p>
             <div className="flex items-center justify-center gap-3 flex-col sm:flex-row">
               <Button 

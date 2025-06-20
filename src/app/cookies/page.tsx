@@ -1,9 +1,20 @@
 import { Metadata } from "next";
+import { generateSEO } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = generateSEO({
   title: "Cookie Policy | Mac Raith Audio Engineering",
-  description: "Cookie policy explaining how Mac Raith Audio Engineering uses cookies and tracking technologies.",
-};
+  description: "Cookie policy explaining how Mac Raith Audio Engineering uses cookies and tracking technologies. Manage your cookie preferences and privacy settings.",
+  url: "/cookies",
+  keywords: [
+    "cookie policy",
+    "Mac Raith audio",
+    "website cookies",
+    "tracking technologies",
+    "privacy settings",
+    "analytics cookies",
+    "GDPR cookies"
+  ]
+});
 
 export default function CookiePolicy() {
   const currentDate = new Date().toLocaleDateString('en-US', { 
@@ -53,12 +64,12 @@ export default function CookiePolicy() {
                 <li><strong>Google Analytics:</strong> Tracks page views, user behavior, and site performance</li>
                 <li><strong>Performance cookies:</strong> Monitor website speed and functionality</li>
               </ul>
-              <h3 className="text-xl font-medium text-foreground mb-3">2.3 Embedded Media Cookies</h3>
+              <h3 className="text-xl font-medium text-foreground mb-3">2.3 Functional Cookies</h3>
               <p className="text-muted-foreground leading-relaxed mb-3">
-                Some cookies are set by embedded media players (e.g., Spotify) to enable playback and track usage.
+                Additional cookies that enhance website functionality and user experience.
               </p>
               <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-                <li><strong>Spotify cookies:</strong> Enable audio previews and track engagement</li>
+                <li><strong>Preference cookies:</strong> Remember user settings and preferences</li>
               </ul>
             </section>
 
@@ -68,7 +79,6 @@ export default function CookiePolicy() {
                 Our website may include content from third-party services that set their own cookies:
               </p>
               <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-                <li><strong>Spotify:</strong> Embedded music players and portfolio content</li>
                 <li><strong>Google Analytics:</strong> Website traffic analysis and reporting</li>
                 <li><strong>Social Media Platforms:</strong> Share buttons and embedded content</li>
               </ul>
@@ -84,7 +94,7 @@ export default function CookiePolicy() {
                 <li><strong>User experience improvement:</strong> Remember your preferences and settings</li>
                 <li><strong>Analytics and insights:</strong> Understand how visitors use our site</li>
                 <li><strong>Performance optimization:</strong> Monitor and improve site speed</li>
-                <li><strong>Embedded media:</strong> Enable playback and engagement tracking for portfolio content</li>
+                <li><strong>User preferences:</strong> Remember settings and customizations</li>
               </ul>
             </section>
 

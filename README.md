@@ -65,13 +65,16 @@ Mac Raith Audio Engineering is a professional portfolio website showcasing audio
    NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
    NEXT_PUBLIC_SANITY_DATASET=production
    
+   # Google Analytics (optional)
+   NEXT_PUBLIC_GA_ID=your_google_analytics_id
+   
    # SMTP Configuration
    SMTP_HOST=smtp.example.com
    SMTP_PORT=587
    SMTP_USER=your-email@example.com
    SMTP_PASS=your-password
-   SMTP_FROM=noreply@example.com
-   CONTACT_EMAIL=hello@example.com
+   SMTP_FROM=noreply@macraithmusic.com
+   CONTACT_EMAIL=collab@macraithmusic.com
    ```
 
 4. **Spotify Setup**

@@ -33,8 +33,8 @@ export function HeroSection() {
                 transition={{ duration: 0.8 }}
               >
                 <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
-                  <span className="block">Professional Audio</span>
-                  <span className="block text-primary mt-1 lg:mt-2">Engineering</span>
+                  <span className="block">Mac Raith</span>
+                  <span className="block text-primary mt-1 lg:mt-2">Professional Audio Engineer</span>
                 </h1>
               </motion.div>
 
@@ -42,10 +42,10 @@ export function HeroSection() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="mt-4 sm:mt-6 text-base sm:text-lg leading-7 sm:leading-8 text-muted-foreground max-w-2xl mx-auto lg:mx-0"
+                className="mt-4 sm:mt-6 text-base sm:text-lg leading-7 sm:leading-8 max-w-2xl mx-auto lg:mx-0"
               >
-                Modern techniques meet passionate dedication. I bring fresh perspective and 
-                cutting-edge approaches to transform your recordings into polished, professional tracks.
+                Delivering mixing and mastering services from my home studio in Boston. 
+                Transform your music today with professional audio engineering. Serving artists across the US.
               </motion.p>
 
               <motion.div
@@ -85,10 +85,11 @@ export function HeroSection() {
                 <div className="absolute inset-0 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
                 <Image
                   src="/MacRaithSpaceMan-NoBackground.png"
-                  alt="Mac Raith Audio Engineer"
+                  alt="Mac Raith - Professional Audio Engineer and Music Producer in space suit"
                   fill
                   className="object-contain float-spaceman spaceman-glow"
                   priority
+                  sizes="(max-width: 640px) 256px, (max-width: 1024px) 320px, 384px"
                 />
               </div>
             </motion.div>
@@ -108,7 +109,7 @@ export function HeroSection() {
                 </div>
               </div>
               <dt className="text-xl sm:text-2xl font-bold leading-7 text-foreground">2 Years</dt>
-              <dd className="text-xs sm:text-sm text-muted-foreground">Focused Experience</dd>
+              <dd className="text-xs sm:text-sm">Focused Experience</dd>
             </div>
             <div className="text-center group">
               <div className="flex justify-center mb-3 sm:mb-4">
@@ -117,7 +118,7 @@ export function HeroSection() {
                 </div>
               </div>
               <dt className="text-xl sm:text-2xl font-bold leading-7 text-foreground">100%</dt>
-              <dd className="text-xs sm:text-sm text-muted-foreground">Client Satisfaction</dd>
+              <dd className="text-xs sm:text-sm">Client Satisfaction</dd>
             </div>
             <div className="text-center group">
               <div className="flex justify-center mb-3 sm:mb-4">
@@ -126,7 +127,7 @@ export function HeroSection() {
                 </div>
               </div>
               <dt className="text-xl sm:text-2xl font-bold leading-7 text-foreground">24hr</dt>
-              <dd className="text-xs sm:text-sm text-muted-foreground">Response Time</dd>
+              <dd className="text-xs sm:text-sm">Response Time</dd>
             </div>
           </motion.div>
         </div>
