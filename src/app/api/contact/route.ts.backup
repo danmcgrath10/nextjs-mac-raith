@@ -214,7 +214,7 @@ Security: Rate limited and validated
     await transporter.sendMail({
       from: process.env.SMTP_FROM || "noreply@macraithmusic.com",
       to: sanitizedData.email,
-      subject: `Thanks for reaching out about ${sanitizedData.projectType}`,
+      subject: `Thanks for reaching out about ${sanitizedData.projectType} - Mac Raith Audio`,
       text: `Hi ${sanitizedData.name},
 
 Thanks for getting in touch about your ${sanitizedData.projectType} project! I've received your message and I'm excited to learn more about your vision.
@@ -224,7 +224,7 @@ I'll review the details you've shared and get back to you within 24 hours with s
 In the meantime, feel free to check out some of my recent work on the website to get a sense of my style and approach.
 
 Talk soon,
-Mac
+Mac Raith
 
 P.S. If you have any reference tracks or specific ideas you'd like to share, feel free to include them in your next message.
 

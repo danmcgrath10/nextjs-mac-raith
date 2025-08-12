@@ -82,13 +82,13 @@ Mac Raith Audio Engineering is a professional portfolio website showcasing audio
    See [SPOTIFY_SETUP.md](./SPOTIFY_SETUP.md) for detailed Spotify API configuration.
 
 5. **Run the development server**
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   # or
-   pnpm dev
-   ```
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+```
 
 6. **Open your browser**
    

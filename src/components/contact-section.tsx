@@ -9,73 +9,88 @@ import { Rocket, Satellite, Radio, MapPin, Mail, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import type { ContactFormData } from "@/types";
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Supabase URL and key must be defined');
-}
-
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 const contactFormSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters").optional(),
-  email: z.string().email("Please enter a valid email address"),
-  project_type: z.enum(["mixing", "mastering", "both", "consultation"], {
+  name: z.string()
+    .min(2, "Name must be at least 2 characters")
+    .max(100, "Name must be less than 100 characters")
+    .regex(/^[a-zA-Z\s\-'\.]+$/, "Name contains invalid characters"),
+  email: z.string()
+    .email("Please enter a valid email address")
+    .max(254, "Email address is too long"),
+  projectType: z.enum(["mixing", "mastering", "both", "consultation"], {
     required_error: "Please select a project type",
-  }).optional(),
-  subject: z.string().min(5, "Subject must be at least 5 characters").optional(),
-  message: z.string().min(20, "Message must be at least 20 characters").optional(),
+  }),
+  subject: z.string()
+    .min(5, "Subject must be at least 5 characters")
+    .max(200, "Subject must be less than 200 characters"),
+  message: z.string()
+    .min(20, "Message must be at least 20 characters")
+    .max(2000, "Message must be less than 2000 characters"),
+  // Honeypot field - should always be empty
+  website: z.string().max(0).optional(),
 });
+
+type ContactFormData = z.infer<typeof contactFormSchema>;
 
 export function ContactSection() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitStatus, setSubmitStatus] = React.useState<"idle" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = React.useState<string>("");
+  const [submitAttempts, setSubmitAttempts] = React.useState(0);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
   });
 
+  // Watch form values for real-time validation
+  const watchedMessage = watch("message", "");
+  const watchedSubject = watch("subject", "");
+
   const onSubmit = async (data: ContactFormData) => {
+    // Rate limiting on client side
+    if (submitAttempts >= 3) {
+      setErrorMessage("Too many attempts. Please wait before trying again.");
+      setSubmitStatus("error");
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus("idle");
+    setErrorMessage("");
 
-    try {
-      // Prepare data for Supabase
-      const supabaseData = {
-        name: data.name || null,
-        email: data.email,
-        project_type: data.project_type || null,
-        subject: data.subject || null,
-        message: data.message || null,
-      };
+          try {
+        // Remove honeypot field before sending
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { website, ...submitData } = data;
+      
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submitData),
+      });
 
-      // Use upsert to handle the unique email constraint
-      const { error } = await supabase
-        .from('contacts')
-        .upsert(supabaseData, { 
-          onConflict: 'email',
-          ignoreDuplicates: false 
-        });
+      const responseData = await response.json();
 
-      if (error) {
-        console.error('Supabase error:', error);
-        throw new Error(`Failed to store contact data: ${error.message}`);
+      if (!response.ok) {
+        throw new Error(responseData.error || 'Failed to send message');
       }
 
       setSubmitStatus("success");
+      setSubmitAttempts(0);
       reset();
     } catch (error) {
       console.error('Contact form error:', error);
+      setSubmitAttempts(prev => prev + 1);
+      setErrorMessage(error instanceof Error ? error.message : 'Failed to send message');
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
@@ -132,16 +147,25 @@ export function ContactSection() {
               {submitStatus === "error" && (
                 <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
                   <p className="text-red-600 text-xs sm:text-sm">
-                    ⚠️ Failed to send message. Please try again or contact me directly.
+                    ⚠️ {errorMessage || "Failed to send message. Please try again or contact me directly at collab@macraithmusic.com."}
                   </p>
                 </div>
               )}
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+                {/* Honeypot field - hidden from users */}
+                <input
+                  type="text"
+                  {...register("website")}
+                  style={{ display: 'none' }}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+
                 <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                      Your Name
+                      Your Name <span className="text-red-500">*</span>
                     </label>
                     <Input
                       id="name"
@@ -149,6 +173,7 @@ export function ContactSection() {
                       placeholder="Enter your name"
                       {...register("name")}
                       className="focus-ring h-10 sm:h-11"
+                      maxLength={100}
                     />
                     {errors.name && (
                       <p className="mt-1 text-xs sm:text-sm text-red-500">{errors.name.message}</p>
@@ -156,7 +181,7 @@ export function ContactSection() {
                   </div>
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                      Email Address
+                      Email Address <span className="text-red-500">*</span>
                     </label>
                     <Input
                       id="email"
@@ -164,6 +189,7 @@ export function ContactSection() {
                       placeholder="your@email.com"
                       {...register("email")}
                       className="focus-ring h-10 sm:h-11"
+                      maxLength={254}
                     />
                     {errors.email && (
                       <p className="mt-1 text-xs sm:text-sm text-red-500">{errors.email.message}</p>
@@ -171,12 +197,12 @@ export function ContactSection() {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="project_type" className="block text-sm font-medium text-foreground mb-2">
-                    Project Type
+                  <label htmlFor="projectType" className="block text-sm font-medium text-foreground mb-2">
+                    Project Type <span className="text-red-500">*</span>
                   </label>
                   <select
-                    id="project_type"
-                    {...register("project_type")}
+                    id="projectType"
+                    {...register("projectType")}
                     className="focus-ring h-10 sm:h-11 w-full rounded-md border border-border bg-background px-3 py-2 text-foreground text-sm sm:text-base"
                     defaultValue=""
                   >
@@ -188,13 +214,16 @@ export function ContactSection() {
                     <option value="both">Mixing & Mastering</option>
                     <option value="consultation">Consultation</option>
                   </select>
-                  {errors.project_type && (
-                    <p className="mt-1 text-xs sm:text-sm text-red-500">{errors.project_type.message as string}</p>
+                  {errors.projectType && (
+                    <p className="mt-1 text-xs sm:text-sm text-red-500">{errors.projectType.message as string}</p>
                   )}
                 </div>
                 <div>
                   <label htmlFor="subject" className="block text-sm font-medium text-foreground mb-2">
-                    Subject
+                    Subject <span className="text-red-500">*</span>
+                    <span className="text-xs text-muted-foreground ml-2">
+                      ({watchedSubject.length}/200)
+                    </span>
                   </label>
                   <Input
                     id="subject"
@@ -202,6 +231,7 @@ export function ContactSection() {
                     placeholder="Project subject or title"
                     {...register("subject")}
                     className="focus-ring h-10 sm:h-11"
+                    maxLength={200}
                   />
                   {errors.subject && (
                     <p className="mt-1 text-xs sm:text-sm text-red-500">{errors.subject.message}</p>
@@ -209,7 +239,10 @@ export function ContactSection() {
                 </div>
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-                    Project Details
+                    Project Details <span className="text-red-500">*</span>
+                    <span className="text-xs text-muted-foreground ml-2">
+                      ({watchedMessage.length}/2000)
+                    </span>
                   </label>
                   <Textarea
                     id="message"
@@ -217,6 +250,7 @@ export function ContactSection() {
                     placeholder="Tell me about your project, vision, timeline, and any specific requirements..."
                     {...register("message")}
                     className="focus-ring resize-none min-h-[120px] sm:min-h-[140px]"
+                    maxLength={2000}
                   />
                   {errors.message && (
                     <p className="mt-1 text-xs sm:text-sm text-red-500">{errors.message.message}</p>
@@ -225,13 +259,15 @@ export function ContactSection() {
                 <Button
                   type="submit"
                   className="w-full group h-10 sm:h-11 text-sm sm:text-base"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || submitAttempts >= 3}
                 >
                   {isSubmitting ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                       Sending Message...
                     </>
+                  ) : submitAttempts >= 3 ? (
+                    "Too Many Attempts - Wait"
                   ) : (
                     <>
                       <Satellite className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform" />
@@ -239,6 +275,12 @@ export function ContactSection() {
                     </>
                   )}
                 </Button>
+                
+                {/* Security notice */}
+                <p className="text-xs text-muted-foreground text-center">
+                  This form is protected against spam and abuse. 
+                  Your message will be reviewed before response.
+                </p>
               </form>
             </div>
           </motion.div>
