@@ -30,7 +30,7 @@ const contactSchema = z.object({
   message: z.string()
     .min(20, "Message must be at least 20 characters")
     .max(MAX_MESSAGE_LENGTH, `Message must be less than ${MAX_MESSAGE_LENGTH} characters`),
-  projectType: z.enum(["mixing", "mastering", "both", "consultation"])
+  projectType: z.enum(["mixing", "mastering", "mixing/mastering", "consultation"])
 });
 
 // Get client IP address
